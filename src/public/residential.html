@@ -24,11 +24,12 @@
 		<link href="assets/css/essentials.css" rel="stylesheet" type="text/css" />
 		<link href="assets/css/layout.css" rel="stylesheet" type="text/css" />
 
+
+
 		<!-- PAGE LEVEL SCRIPTS -->
 		<link href="assets/css/header-1.css" rel="stylesheet" type="text/css" />
 		<link href="assets/css/color_scheme/red.css" rel="stylesheet" type="text/css" id="color_scheme" />
 
-		<link rel="stylesheet" href="./assets/css/residential.css">
     	<script src="./assets/js/residential.js" defer></script>
 	</head>
 
@@ -358,6 +359,47 @@
 			</section>
 			<!-- /BUSINESS MODEL -->
 
+			<!-- AGENT DATA VIA FETCH -->
+<section>
+
+	<div class="container">
+		<h2 class="m-0">Our Top Rated Agents!</h2>
+		<!-- <p>
+			Contact one today! and find out why we are
+			<span class="word-rotator" data-delay="2000">
+				<span class="items" style="text-align: center">
+					<span>trusted</span>
+					<span>loved</span>
+				</span>
+			</span>
+			by our clients.
+		</p>
+ 		-->
+		 <label for="filterDropdown">Choose a Region:</label>
+		 <select id="regionDropdown">
+			 <option value="all">All</option>
+			 <option value="north">north</option>
+			 <option value="south">south</option>
+			 <option value="east">east</option>
+			 <option value="west">west</option>
+		 </select>
+		<table class="sortable">
+			<thead class="sortable">
+				<th class="col-md-4" id="fnamehead">First Name</th>
+				<th class="col-md-4" id="lnamehead">Last Name</th>
+				<th class="col-md-4" id="feehead">Fee</th>
+				<th class="col-md-6" id="ratinghead">Rating</th>
+			</thead>
+			<tbody id="agentlist">
+				
+			</tbody>
+			
+		</table>
+			
+	</div>
+</section>
+<!-- /AGENT DATA VIA FETCH -->
+
 
 
 			<!-- PARALLAX -->
@@ -530,7 +572,8 @@
 		<script>var plugin_path = 'assets/plugins/';</script>
 		<script src="assets/plugins/jquery/jquery-3.3.1.min.js"></script>
 
-		<!-- LAYER SLIDER -->
+
+		LAYER SLIDER
 		<script src="assets/plugins/slider.layerslider/js/layerslider_pack.js"></script>
 		<script src="assets/js/view/demo.layerslider_slider.js"></script>
 
@@ -545,6 +588,9 @@
 				this.reset();
 			});
 		</script>
+				
+		<script src="assets/residential.js"></script>
+
 
 	</body>
 </html>
