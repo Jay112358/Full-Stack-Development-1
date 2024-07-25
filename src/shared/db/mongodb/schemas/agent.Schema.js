@@ -29,11 +29,13 @@ const AgentSchema = new mongoose.Schema({
     rating: {
         type: Number,
         min: 0,
-        max: 100
+        max: 100,
+        default:96
     },
     fee: {
         type: Number,
-        min: 0
+        min: 0,
+        default: 100,
     },
     sales: {
         type: Number,

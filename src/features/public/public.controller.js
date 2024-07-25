@@ -1,14 +1,20 @@
 const Data = require('../../shared/resources/data');
+const schema = require('../../shared/db/mongodb/schemas/contactUs.Schema')
 
 const contactUs = (req,res) => {
-  const firstName = req.body.first_name;
-  const lastName = req.body.last_name;
-  const message = req.body.message;
+  try{
+  const fullName = req.body.fullname;
 
-  const responseMessage = `Message received from ${firstName} ${lastName}`;
+  schema.create(req.body)
 
-  console.log(responseMessage);
+  const responseMessage = `Message received from ${fullName}`;
+
+  console.log(req.body);
   res.send(responseMessage);
+}
+catch(error){
+  res.send(error)
+}
 };
 
 const calculateResidentialQuote = (req,res) => {
@@ -54,21 +60,73 @@ const calculateResidentialQuote = (req,res) => {
 };
 
 const calcResidentialElev = (numFloors, numApts) => {
-  const elevatorsRequired = Math.ceil(numApts / numFloors / 6)*Math.ceil(numFloors / 20);
-  return elevatorsRequired;
+  return Math.ceil(numApts / numFloors / 6) * Math.ceil(numFloors / 20);
 };
 
 const calcCommercialElev = (numFloors, maxOccupancy) => {
-  const elevatorsRequired = Math.ceil((maxOccupancy * numFloors) / 200)*Math.ceil(numFloors / 10);
-  const freighElevatorsRequired = Math.ceil(numFloors / 10);
-  return freighElevatorsRequired + elevatorsRequired;
+  const elevatorsRequired = Math.ceil((maxOccupancy * numFloors) / 200) * Math.ceil(numFloors / 10);
+  const freightElevatorsRequired = Math.ceil(numFloors / 10);
+  return freightElevatorsRequired + elevatorsRequired;
 };
 
-const calcInstallFee = (numElvs, tier) => {
-  const unitPrice = Data.unitPrices[tier];
-  const installPercentFees = Data.installPercentFees[tier];
-  const total = numElvs * unitPrice * installPercentFees;
-  return total;
+const calcInstallFee = (totalPrice, installPercentFee) => {
+  return (installPercentFee / 100) * totalPrice;
 };
 
-module.exports = {contactUs,calculateResidentialQuote};
+const getPricing = (productLine, numElv) => {
+  const unitPrices = {
+      standard: 8000,
+      premium: 12000,
+      excelium: 15000,
+  };
+  const installPercentFees = {
+      standard: 10,
+      premium: 15,
+      excelium: 20,
+  };
+
+  let unitPrice = unitPrices[productLine];
+  let installPercentFee = installPercentFees[productLine];
+  let subtotal = unitPrice * numElv;
+  let totalInstallFee = calcInstallFee(subtotal, installPercentFee);
+  let totalPrice = subtotal + totalInstallFee;
+
+  return {
+      unitPrice,
+      subtotal,
+      totalInstallFee,
+      totalPrice
+  };
+};
+
+const getElevatorEstimate = (req, res) => {
+  
+  const { numFloors, numApts, maxOccupancy, numElevators, productLine } = req.query
+  const building_type = req.params.building_type
+
+  let calculatedElv;
+  if (building_type == "commercial") {
+      calculatedElv = calcCommercialElev(parseInt(numFloors), parseInt(maxOccupancy));
+  } else if (building_type == "residential") {
+      calculatedElv = calcResidentialElev(parseInt(numFloors), parseInt(numApts));
+  } else if (building_type == "industrial") {
+      calculatedElv = parseInt(numElevators);
+  } else {
+      return res.status(400).json({ error: "Invalid building type" });
+  }
+
+  const pricing = getPricing(productLine, calculatedElv);
+
+  res.json({
+      elevatorsRequired: calculatedElv,
+      unitPrice: pricing.unitPrice,
+      subtotal: pricing.subtotal,
+      totalInstallFee: pricing.totalInstallFee,
+      totalPrice: pricing.totalPrice
+  });
+};
+
+module.exports = {
+  getElevatorEstimate,
+  contactUs
+};
