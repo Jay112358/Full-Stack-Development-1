@@ -2,21 +2,19 @@ const Data = require('../../shared/resources/data');
 const schema = require('../../shared/db/mongodb/schemas/contactUs.Schema')
 
 const contactUs = (req,res) => {
+  try{
   const fullName = req.body.fullname;
-  // const email = req.body.email;
-  // const phone = req.body.phone;
-  // const company_name = req.body.company_name;
-  // const project_desc = req.body.project_desc;
-  // const dept = req.body.department;
-  // const message = req.body.message;
-  // const file = req.body.file;
 
   schema.create(req.body)
 
   const responseMessage = `Message received from ${fullName}`;
 
-  console.log(responseMessage);
+  console.log(req.body);
   res.send(responseMessage);
+}
+catch(error){
+  res.send(error)
+}
 };
 
 const calculateResidentialQuote = (req,res) => {
@@ -103,15 +101,15 @@ const getPricing = (productLine, numElv) => {
 
 const getElevatorEstimate = (req, res) => {
   
-  const { buildingType, numFloors, numApts, maxOccupancy, numElevators, productLine } = req.query
-  
+  const { numFloors, numApts, maxOccupancy, numElevators, productLine } = req.query
+  const building_type = req.params.building_type
 
   let calculatedElv;
-  if (buildingType == "commercial") {
+  if (building_type == "commercial") {
       calculatedElv = calcCommercialElev(parseInt(numFloors), parseInt(maxOccupancy));
-  } else if (buildingType == "residential") {
+  } else if (building_type == "residential") {
       calculatedElv = calcResidentialElev(parseInt(numFloors), parseInt(numApts));
-  } else if (buildingType == "industrial") {
+  } else if (building_type == "industrial") {
       calculatedElv = parseInt(numElevators);
   } else {
       return res.status(400).json({ error: "Invalid building type" });

@@ -10,7 +10,8 @@ const helloWorld = async(req, res) => {
 const status = async(req,res) => {
   const envName = process.env.ENV_NAME;
   const message = `Environment '${envName}' running on port: ${port}`;
-  res.send(message);
+  ResponseUtil.respondOk(res, null, `'${envName}' running on port: ${port}`)
+  //res.send(message);
 };
 
 const error = async(req,res) => {

@@ -11,18 +11,18 @@ const contactUsSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: true,
-        validate:{
-            validator: value => validator.isEmail(value),
-            message: '(VALUE) is not a valid email address.'
-        }
-    },
+    //     validate:{
+    //         validator: value => validator.isEmail(value),
+    //         message: '(VALUE) is not a valid email address.'
+    //     }
+     },
     phone: {
         type: String,
         required: true,
-        validate:{
-            validator: value => validator.isMobilePhone(value),
-            message: '(VALUE) is not a valid phone number.'
-        }
+        // validate:{
+        //     validator: value => validator.isMobilePhone(value),
+        //     message: '(VALUE) is not a valid phone number.'
+        // }
     },
     company_name: {
         type: String,
@@ -50,7 +50,7 @@ const contactUsSchema = new mongoose.Schema({
     },
     file: {
         type: String, //string is the URL to file location
- 
+        trim: true,
     },
 
 }, { timestamps: true })

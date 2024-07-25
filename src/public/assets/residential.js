@@ -21,6 +21,7 @@ const maketable = (data) => {
         const last_name = e.last_name;
         const fee = e.fee;
         const rating = e.rating;
+        const region = e.region;
         const dollarfee = formatCurrency.format(fee);
 
 
@@ -41,6 +42,7 @@ const maketable = (data) => {
                 <td><output readonly></output>${last_name}</td>
                 <td><output readonly></output>${dollarfee}</td>
                 <td><output readonly></output>${rating}</td>
+                <td><output readonly></output>${region}</td>
             </tr>
         </tbody>`;
         agents += rowdata;
@@ -89,11 +91,18 @@ ratinghead.addEventListener("click", async function() {
 });
 
 
-regionDropdown.addEventListener("change", function() {
-    console.log(regionDropdown.value);
-    const allAgents = agentdata1();
-    const filteredAgents = allAgents.filter(agent => regionDropdown.value === 'all' || agent.region === regionDropdown.value);
-    displayAgents(filteredAgents);
+regionDropdown.addEventListener("change", async function() {
+    try {
+        const fetchreturn = await fetch(`http://localhost:3004/topagents?region=${regionDropdown.value}`) // Change to your backend URL
+        const fetchjson = await fetchreturn.json();
+        
+        maketable(fetchjson);
+      
+        return fetchjson;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+    console.log(regionDropdown.value)
 });
 
 
